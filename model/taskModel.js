@@ -17,7 +17,7 @@ const taskSchema = new mongoose.Schema({
         maxlength: [500, 'Name can not be more than 500 characters']
     },
     status: { type: String, enum: ['TODO', 'INPROGRESS', 'DONE'], default: 'TODO' },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 
 const Task = mongoose.model('Task', taskSchema);

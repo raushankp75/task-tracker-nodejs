@@ -4,7 +4,12 @@ const User = require('../model/userModel');
 // Get a list of all users
 const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({});
+        // Sending all users
+        // const users = await User.find({});
+
+        // excluding admin from the list
+        const users = await User.find({ role: { $ne: 'ADMIN' } });
+        console.log(users, "users 14 userController.js")
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
@@ -25,6 +30,8 @@ const getUserById = async (req, res) => {
 
 // Create a new user
 const createUser = async (req, res) => {
+    console.log("here")
+    console.log(req.body, "req.body 14 userController.js")
     try {
         const user = await User.create(req.body);
         res.status(200).json(user);
