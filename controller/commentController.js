@@ -1,24 +1,40 @@
 const Comment = require('../model/commentModel');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
-exports.createComment = async (req, res, next) => {
+
+const createComment = async (req, res, next) => {
+
+    const token = req.header('Authorization').replace('Bearer ', '');
+
+    const decoded = jwt.verify(token, "SECRETKEY");
+
+    console.log(decoded, "decoded 9 commentController.js")
+
+    const taskID = new mongoose.Types.ObjectId(req.params.id);
+
+
     try {
-        const comment = await Comment.create(req.body);
+
+        const comment = new Comment({ ...req.body, user: decoded.id, task: taskID });
+
+        await comment.save();
         res.status(200).json(comment);
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
 }
 
-exports.getAllComments = async (req, res, next) => {
+const getAllComments = async (req, res, next) => {
     try {
-        const comments = await Comment.find({});
+        const comments = await Comment.find({}).populate('user');
         res.status(200).json(comments);
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
 }
 
-exports.getCommentById = async (req, res, next) => {
+const getCommentById = async (req, res, next) => {
     const comment = await Comment.findById(req.params.id);
     res.status(200).json(comment);
 }

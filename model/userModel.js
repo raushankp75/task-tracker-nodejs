@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
         // select: false
     },
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 
 });
 

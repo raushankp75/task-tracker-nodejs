@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAllTasks, getTaskById, createTask } = require('../controller/taskController');
 
-router.get('/tasks', getAllTasks);
-router.get('/tasks/:id', getTaskById);
-router.post('/tasks', createTask);
+const { getAllComments, getCommentById, createComment } = require('../controller/commentController');
+
+router.get('/comments', getAllComments);
+router.get('/comments/:id', getCommentById);
+router.post('/comments/:id', createComment);
 
 module.exports = router;

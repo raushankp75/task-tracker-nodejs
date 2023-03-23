@@ -18,7 +18,8 @@ const taskSchema = new mongoose.Schema({
     },
     status: { type: String, enum: ['TODO', 'INPROGRESS', 'DONE'], default: 'TODO' },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
-});
+}, { timestamps: true });
 
 const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;
