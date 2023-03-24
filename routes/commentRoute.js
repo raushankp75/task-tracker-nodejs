@@ -6,7 +6,7 @@ const { getAllComments, getCommentById, createComment, gatCommentByTaskId } = re
 
 router.get('/comments', getAllComments);
 router.get('/comments/:id', getCommentById);
-router.post('/comments/:id', createComment);
+router.post('/tasks/:id/comments', createComment);
 router.get('/tasks/:id/comments', gatCommentByTaskId);
 
 module.exports = router;
