@@ -11,6 +11,12 @@ app.use(cors(
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
+const requestLogger = (req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl} - ${new Date()}`);
+    next();
+};
+
+app.use(requestLogger);
 
 
 const port = 9000;

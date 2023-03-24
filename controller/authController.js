@@ -5,7 +5,7 @@ const env = require('dotenv').config();
 const login = async (req, res) => {
     // console.log(req)
     const { email, password } = req.body;
-    console.log(req.body, "req.body 14")
+    // console.log(req.body, "req.body 14")
 
     // Check if the email and password are provided
     if (!email || !password) {
@@ -23,7 +23,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'User is not Registered' });
         }
 
-        console.log(user, 23)
+        // console.log(user, 23)
         // Check if the password is correct
         if (user.password !== password) {
             return res.status(400).json({ message: 'Invalid credentials' });
