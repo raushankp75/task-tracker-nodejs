@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const env = require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('../model/userModel');
+const { GetIdAuth } = require('../utils/GetIdAuth');
+const ObjectId = mongoose.Types.ObjectId;
 
 
 const getAllTasks = async (req, res) => {
@@ -53,14 +55,7 @@ const createTask = async (req, res) => {
     const { title, description } = req.body;
 
     const token = req.header('Authorization').replace('Bearer ', '');
-    // const token = req.header('Authorization').split(' ')[1];
-
-    // console.log(token, "token 36 taskController.js")
-
     const decoded = jwt.verify(token, "SECRETKEY");
-
-    // isUser && isUser.role == "USER" ? console.log("User found") : console.log("User not found");
-
     const userId = decoded.id;
 
 
@@ -106,35 +101,70 @@ const createTaskAdmin = async (req, res) => {
 
 
 
-// For draging and dropping the task
+// For draging and dropping the task && for user only can move own task
 
 const updateTask = async (req, res) => {
+
+    // res.status(200).json({ message: 'Task updated' });
+
+    const UserId = new ObjectId(GetIdAuth(req));
+
+    // console.log(UserId, "UserId 28 taskController.js")
+
+    const taskId = req.params.id;
+    const newStatus = req.body.status;
+
+
+    // const TaskByThisUser = await Task.findById({ user: UserId })
+
+    // console.log(TaskByThisUser, "TaskByThisUser 28 taskController.js")
+
+
+    const currentTaskStatus = await Task.findById(taskId);
+
+    console.log(currentTaskStatus.user, "currentTaskStatus 28 taskController.js")
+    console.log(UserId, "UserId 28 taskController.js")
+
+    try {
+
+        if (currentTaskStatus.status === "DONE") {
+            res.status(400).json({ message: 'DONE task cannot be updated' });
+        }
+
+        else if (!currentTaskStatus.user.equals(UserId)) {
+            res.status(400).json({ message: 'You cannot update other user task' });
+        }
+
+        else {
+            const task = await Task.findByIdAndUpdate(taskId, { status: newStatus },
+                { new: true });
+            res.status(200).json({ task, message: 'Task updated' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
+
+// For Admin
+const updateTaskAdmin = async (req, res) => {
 
     // res.status(200).json({ message: 'Task updated' });
     const taskId = req.params.id;
     const newStatus = req.body.status;
 
-    console.log(taskId, newStatus, "taskId 50 taskController.js")
 
     try {
-        const task = await Task.findByIdAndUpdate(taskId, { status: newStatus }, { new: true });
+
+
+        const task = await Task.findByIdAndUpdate(taskId, { status: newStatus },
+            { new: true });
         res.status(200).json(task);
+
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
-
-    // const task = await Task.findByIdAndUpdate(taskId, { status: newStatus }, { new: true });
-
-    // if (!task) {
-    //     res.status(404).json({ error: 'Task not found' });
-    // }
-
 }
 
 
-
-
-
-
-
-module.exports = { getAllTasks, getTaskById, createTask, updateTask, getTaskByUserToken, createTaskAdmin };
+module.exports = { getAllTasks, getTaskById, createTask, updateTask, getTaskByUserToken, createTaskAdmin, updateTaskAdmin };

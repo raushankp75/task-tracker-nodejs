@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please add an email'],
         unique: true,
     },
+    profileImg: {
+        type: String,
+        default: 'no-photo.jpg'
+    },
     mobile: { type: String, required: [true, 'Please add a mobile number'] },
     role: { type: String, enum: ['ADMIN', 'USER'], default: 'USER' },
     password: {
