@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     },
     profileImg: {
         type: String,
-        default: 'no-photo.jpg'
+        default: 'no-photo.jpg',
+        required: [true, 'Please add a ProfilePic'],
     },
     mobile: { type: String, required: [true, 'Please add a mobile number'] },
     role: { type: String, enum: ['ADMIN', 'USER'], default: 'USER' },
@@ -24,7 +25,6 @@ const userSchema = new mongoose.Schema({
         // minlength: 6,
         // select: false
     },
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
 
 });
 

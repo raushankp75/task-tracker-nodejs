@@ -5,7 +5,7 @@ const dotenv = require('dotenv').config();
 
 cloudinary.config({
     cloud_name: process.env.cloud_name,
-    api_key: process.env.cloud_name,
+    api_key: process.env.api_key,
     api_secret: process.env.api_secret
 });
 
@@ -40,30 +40,34 @@ const getUserById = async (req, res) => {
 // Create a new user
 const createUser = async (req, res) => {
 
+    // const filepath = req.file.path
 
-
+    // console.log(filepath)
     // console.log(req.body, "req.body 14 userController.js")
     const { user } = req.body;
-    console.log(user)
-    // const profileImg = req.files.profileImg;
-    // console.log(profileImg, "profileImg 14 userController.js")
+    const userData = JSON.parse(user)
+    console.log(userData, 49)
+    const profileImg = req.files.dp;
+    console.log(profileImg, "profileImg 14 userController.js")
 
-    // const profileImgResponse = await cloudinary.uploader.upload(profileImg.tempFilePath, {
-    //     upload_preset: 'task-tracker'
-    // });
+    const profileImgResponse = await cloudinary.uploader.upload(profileImg.tempFilePath, {
+        upload_preset: 'task-tracker'
+    });
 
-    // console.log(profileImgResponse, "profileImgResponse 14 userController.js")
+    console.log(profileImgResponse, "profileImgResponse 14 userController.js")
 
-    // const newUserData = {
-    //     ...user,
-    //     // profileImage: profileImageUploadResult.secure_url,
-    //     profileImg: profileImgResponse.secure_url
-    // };
+    const newUserData = {
+        ...userData,
+        // profileImage: profileImageUploadResult.secure_url,
+        profileImg: profileImgResponse.secure_url
+    };
+
+    console.log(newUserData, 64)
 
 
 
     try {
-        const userDetail = await User.create(JSON.parse(user));
+        const userDetail = await User.create(newUserData);
         res.status(200).json(userDetail);
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
